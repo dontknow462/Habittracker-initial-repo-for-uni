@@ -16,14 +16,33 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install zip \
     && docker-php-ext-install pdo pdo_mysql
 
+
+
 # Set working directory
 WORKDIR /var/www/html
+
+COPY ./src /var/www/html
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Install Composer dependencies
+RUN composer install
+
+
+# Install Node.js and NPM
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+# Install Laravel Breeze and its dependencies
+RUN composer require laravel/breeze --dev \
+    && php artisan breeze:install
+
+# Install Node.js dependencies and compile assets
+RUN npm install \
+    && npm run dev
+
 # Copy application files
-COPY ./src /var/www/html
 
 # Expose port
 EXPOSE 8000

@@ -19,10 +19,9 @@ services:
     image: mysql:5.7
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: dockerBase
+
     volumes:
       - dbdata:/var/lib/mysql
     networks:
